@@ -1,0 +1,18 @@
+/env
+build/
+dist/
+*.egg-info/
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
+.ipynb_checkpoints
+env
+
+# due to using tox and pytest
+.tox
+.cache
+.DS_Store
+mlruns/
+*.tmp
