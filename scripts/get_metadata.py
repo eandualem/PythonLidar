@@ -18,16 +18,27 @@ class GetMetadata():
     self._logger = get_logger("GetMetadata")
 
   def get_metadata(self):
-    filenames = self.file_handler.read_txt(self.name)
-    df = pd.DataFrame(columns=['dataset', 'xmin', 'xmax', 'ymin', 'ymax', 'points'])
+    filenames = self._file_handler.read_txt(self.filename)
+    df = pd.DataFrame(columns=['region', 'year', 'xmin', 'xmax', 'ymin', 'ymax', 'points'])
   
     index = 0
     for d in filenames:
-      r = self.http.request('GET', self.url + d + "ept.json")
+      r = self._http.request('GET', self.url + d + "ept.json")
       if r.status == 200:
         j = json.loads(r.data)
+        temp_region = d.replace('/', '')
+        temp_region = temp_region.split("_")
+        if(len(temp_region[-1]) == 4):
+          region = "_".join(temp_region[:-1])
+          year = temp_region[-1]
+        else:
+          region = "_".join(temp_region)
+          year = None
+
+        region
         df = df.append({
-          'dataset': d,
+          'region': region,
+          'year': year,
           'xmin': j['bounds'][0],
           'xmax': j['bounds'][3],
           'ymin': j['bounds'][1],
@@ -38,6 +49,11 @@ class GetMetadata():
           print(f"Read progress: {((index / len(filenames)) * 100):.2f}%")
         index += 1
       else:
-        self.logger.exception(f"Connection problem at index: {((index / len(filenames)) * 100):.2f}%")
+        self._logger.exception(f"Connection problem at index: {((index / len(filenames)) * 100):.2f}%")
         return
     self._file_handler.save_csv(df, self.filename)
+
+
+if __name__ == "__main__":
+    gm = GetMetadata()
+    gm.get_metadata()
