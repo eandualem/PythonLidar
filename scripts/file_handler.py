@@ -19,6 +19,16 @@ class FileHandler():
     except Exception:
       self.logger.exception(f"{name} not found")
 
+  def read_txt(self, name):
+    try:
+      path = Config.ASSETS_PATH / str(name + '.txt')
+      with open(path, "r") as f:
+        text_file = f.read().splitlines()
+      self.logger.info(f"{name} read successfully")
+      return text_file
+    except Exception:
+      self.logger.exception(f"{name} not found")
+
   def save_csv(self, df, name, index=False):
     try:
       path = Config.ASSETS_PATH / str(name + '.csv')
