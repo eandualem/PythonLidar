@@ -39,6 +39,6 @@ pip install -r requirements.txt
 ## Scripts
   - `file_handler`: Helper class for reading and writing different file formats
   - `get_metadata`: Creates a metadata describing boundary coordinates for all regions. This enables the package to retrieve the lidar dataset from the AWS without specifying the region by simply using the boundary value.
-  - `get_data`: helper class for reading and writing to files
+  - `get_data`: helper class for retrieving lidar data from AWS
 
 ## Test
