@@ -7,7 +7,6 @@
   - [Overview](#overview)
   - [Requirements](#requirements)
   - [Install](#install)
-  - [File](#file)
   - [Data](#data)
   - [Notebooks](#notebooks)
   - [Scripts](#scripts)

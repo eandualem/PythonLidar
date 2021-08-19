@@ -1,6 +1,7 @@
 import json
 import pdal
 from config import Config
+from df_generator import DfGenerator
 from log import get_logger
 from file_handler import FileHandler
 
@@ -10,41 +11,55 @@ PIPELINE_PATH = "./get_data.json"
 
 class GetData:
   def __init__(self,
-               output_filename: str = "temp",
-               public_access_path: str = PUBLIC_DATA_PATH):
+               public_access_path: str = PUBLIC_DATA_PATH,
+               metadata_filename: str = "",
+               ):
     self._public_access_path = public_access_path
-    self._output_filename = output_filename
+    self._metadata_filename = metadata_filename
+    self._df_generator = DfGenerator()
     self._logger = get_logger("FileHandler")
     self._file_handler = FileHandler()
 
-  def get_pipeline(self, bounds, regions):
+  def get_pipeline(self, bounds, regions, filename):
     pipe = self._file_handler.read_json(PIPELINE_PATH)
 
     pipe['pipeline'][0]['bounds'] = bounds
     pipe['pipeline'][0]['filename'] = self._public_access_path + regions + "/ept.json"
-    pipe['pipeline'][3]['filename'] = "../data/laz/" + self._output_filename + ".laz"
-    pipe['pipeline'][4]['filename'] = "../data/tif/" + self._output_filename + ".tif"
+    pipe['pipeline'][3]['filename'] = "../data/laz/" + filename + ".laz"
+    pipe['pipeline'][4]['filename'] = "../data/tif/" + filename + ".tif"
     return pdal.Pipeline(json.dumps(pipe))
 
-  def get_region(self):
-    # TODO: dynamically retrieve region
+  def check_cache(self):
+    # TODO: 
     pass
 
-  def get_raster_terrain(self, bounds: str, regions: str) -> None:
-    pl = self.get_pipeline(bounds, regions)
+  def get_regions(self, bounds: str):
+    df = self._file_handler.read_csv(self._metadata_filename)
+    filtered_df = df[
+      df['xmin'] > bounds[0][0]
+      and df['xmax'] > bounds[0][1]
+      and df['ymin'] > bounds[1][0]
+      and df['ymax'] > bounds[1][1]
+    ]
+    return filtered_df[["dataset"]]
 
-    try:
-      pl.execute()
-      metadata = pl.metadata
-      print('metadata: ', metadata)
-      log = pl.log
-      print("logs: ", log)
-    except RuntimeError as e:
-      print(e)
+  def get_raster_terrain(self, bounds: str) -> None:
+    list_geo_data = []
+    for region in self.get_regions():
+      filename = region + "_".join(bounds)
+      # TODO: check in chache first
+      pl = self.get_pipeline(bounds, region, filename)
+      try:
+        pl.execute()
+        metadata = pl.metadata
+        geo_data = self._df_generator.get_geo_data(filename)
+        list_geo_data.append(geo_data)
+      except RuntimeError as e:
+        print(e)
+    return list_geo_data
 
 
 # Test
-
 get_data = GetData()
 get_data.get_raster_terrain(
   bounds="([-10425171.940, -10423171.940], [5164494.710, 5166494.710])",

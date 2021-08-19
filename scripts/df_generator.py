@@ -5,17 +5,14 @@ import geopandas as gpd
 from shapely.geometry import box, Point, Polygon
 
 
-class ElevationExtractor:
-  def __init__(self,
-               filename: str = "temp",
-               crs_epgs=26915) -> None:
-    self.filename = filename
+class DfGenerator:
+  def __init__(self, crs_epgs=26915) -> None:
     self.crs_epgs = crs_epgs
     self._file_handler = FileHandler()
     self._logger = get_logger("ElevationExtractor")
 
-  def get_elevation(self):
-    las = self._file_handler(self.filename)
+  def get_geo_data(self, filename: str):
+    las = self._file_handler(filename)
     geometry_points = [Point(x, y) for x, y in zip(las.x, las.y)]
     elevations = np.array(las.z)
 
