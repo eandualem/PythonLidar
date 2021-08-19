@@ -30,7 +30,7 @@ class GetData:
     return pdal.Pipeline(json.dumps(pipe))
 
   def check_cache(self):
-    # TODO: 
+    # TODO:
     pass
 
   def get_regions(self, bounds: str):
@@ -43,32 +43,36 @@ class GetData:
     ]
     return filtered_df[["dataset"]]
 
-  def get_raster_terrain(self, bounds: str) -> None:
+  def get_geo_data(self, bounds, region, filename) -> None:
+    # TODO: check in chache first
+    pl = self.get_pipeline(bounds, region, filename)
+    try:
+      pl.execute()
+      # metadata = pl.metadata
+      geo_data = self._df_generator.get_geo_data(filename)
+      self._logger(f"successfully read geo data: {filename}")
+      return geo_data
+    except RuntimeError as e:
+      self._logger(f"error reading geo data, error: {e}")
+
+  def get_data(self, bounds: str) -> None:
     list_geo_data = []
     for region in self.get_regions():
       filename = region + "_".join(bounds)
-      # TODO: check in chache first
-      pl = self.get_pipeline(bounds, region, filename)
-      try:
-        pl.execute()
-        metadata = pl.metadata
-        geo_data = self._df_generator.get_geo_data(filename)
-        list_geo_data.append(geo_data)
-      except RuntimeError as e:
-        print(e)
+      list_geo_data.append(self.get_geo_data(filename))
     return list_geo_data
 
 
 # Test
 get_data = GetData()
 get_data.get_raster_terrain(
-  bounds="([-10425171.940, -10423171.940], [5164494.710, 5166494.710])",
-  regions="IA_FullState",
-  output_filename="iowa",
+    bounds="([-10425171.940, -10423171.940], [5164494.710, 5166494.710])",
+    regions="IA_FullState",
+    output_filename="iowa",
 )
 
-get_data.get_raster_terrain(
-  bounds="([-11669524.7, -11666600.81], [4776607.3, 4778714.4])",
-  regions="USGS_LPC_CO_SoPlatteRiver_Lot5_2013_LAS_2015",
-  output_filename="SoPlatteRiver",
-)
+# get_data.get_raster_terrain(
+#     bounds="([-11669524.7, -11666600.81], [4776607.3, 4778714.4])",
+#     regions="USGS_LPC_CO_SoPlatteRiver_Lot5_2013_LAS_2015",
+#     output_filename="SoPlatteRiver",
+# )
