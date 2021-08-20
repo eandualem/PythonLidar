@@ -7,9 +7,14 @@
       "tag": "readdata"
     },
     {
-      "limits": "Classification![2:7], Classification![9:9]",
+      "limits": "Classification![7:7]",
       "type": "filters.range",
       "tag": "nonoise"
+    },
+    {
+      "assignment": "Classification[:]=0",
+      "tag": "wipeclasses",
+      "type": "filters.assign"
     },
     {
       "in_srs": "EPSG:3857",
