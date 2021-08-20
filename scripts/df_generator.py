@@ -13,16 +13,16 @@ class DfGenerator:
     self._file_handler = FileHandler()
     self._logger = get_logger("DfGenerator")
 
-  def get_geo_data(self, filename: str):
-    las = self._file_handler(filename)
-    geometry_points = [Point(x, y) for x, y in zip(las.x, las.y)]
-    elevations = np.array(las.z)
+  def get_geo_data(self, array_data):
+    for i in array_data:
+      geometry_points = [Point(x, y) for x, y in zip(i["X"], i["Y"])]
+      elevations = np.array(i["Z"])
 
-    df = gpd.GeoDataFrame(columns=["elevation", "geometry"])
-    df['elevation'] = elevations
-    df['geometry'] = geometry_points
-    df = df.set_geometry("geometry")
-    df.set_crs(epsg=self.output_epsg, inplace=True)
+      df = gpd.GeoDataFrame(columns=["elevation", "geometry"])
+      df['elevation'] = elevations
+      df['geometry'] = geometry_points
+      df = df.set_geometry("geometry")
+      df.set_crs(epsg=self.output_epsg, inplace=True)
     return df
 
   def covert_crs(self, crs_epgs: int, df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
