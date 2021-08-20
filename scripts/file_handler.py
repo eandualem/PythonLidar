@@ -50,10 +50,11 @@ class FileHandler():
   def read_point_data(self, name) -> dict:
     try:
       path = Config.LAZ_PATH / str(name + '.laz')
+      print(path)
       las = laspy.read(path)
-      self.logger.info(f"{name} read successfully")
+      self._logger.info(f"{name} read successfully")
       return las
     except Exception:
-      self.logger.exception(f"{name} not found")
+      self._logger.exception(f"{name} not found")
 
 
