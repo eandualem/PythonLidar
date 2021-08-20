@@ -1,41 +1,44 @@
 {
   "pipeline": [
     {
+      "type": "readers.ept", 
+      "tag": "read_data",
       "bounds": "",
-      "filename": "",
-      "type": "readers.ept",
-      "tag": "readdata"
+      "filename": ""
     },
     {
-      "limits": "Classification![7:7]",
       "type": "filters.range",
-      "tag": "nonoise"
+      "inputs": [ "read_data" ],
+      "tag": "no_noise",
+      "limits": "Classification![7:7]"
     },
     {
-      "assignment": "Classification[:]=0",
-      "tag": "wipeclasses",
-      "type": "filters.assign"
+      "type": "filters.assign",
+      "inputs": [ "no_noise" ],
+      "tag": "wipe_classes",
+      "assignment": "Classification[:]=0"
     },
     {
-      "in_srs": "EPSG:3857",
-      "out_srs": "",
       "type": "filters.reprojection",
-      "tag": "reprojection"
+      "inputs": [ "wipe_classes" ],
+      "tag": "reprojection",
+      "in_srs": "EPSG:3857",
+      "out_srs": ""
     },
     {
-      "filename": "",
+      "type": "writers.las",
+      "tag": "writers_las",
       "inputs": [ "reprojection" ],
-      "tag": "writerslas",
-      "type": "writers.las"
+      "filename": ""
     },
     {
+      "type": "writers.gdal",
+      "inputs": [ "writers_las" ],
       "filename": "",
-      "gdalopts": "tiled=yes,     compress=deflate",
-      "inputs": [ "writerslas" ],
+      "gdalopts": "tiled=yes, compress=deflate",
       "nodata": -9999,
       "output_type": "idw",
       "resolution": 1,
-      "type": "writers.gdal",
       "window_size": 6
     }
   ]
