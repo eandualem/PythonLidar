@@ -12,7 +12,8 @@
       "tag": "nonoise"
     },
     {
-      "out_srs": "EPSG:26915",
+      "in_srs": "EPSG:3857",
+      "out_srs": "",
       "type": "filters.reprojection",
       "tag": "reprojection"
     },

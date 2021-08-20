@@ -1,7 +1,11 @@
 {
   "cSpell.words": [
     "epgs",
+    "inplace",
+    "iterrows",
+    "laspy",
     "pdal",
+    "usgs",
     "xmax",
     "xmin",
     "ymax",
