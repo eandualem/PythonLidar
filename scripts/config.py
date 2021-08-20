@@ -9,6 +9,6 @@ class Config:
   DATA_PATH = ROOT_PATH / "data/"
   ASSETS_PATH = ROOT_PATH / "assets/"
   LAZ_PATH = DATA_PATH / "laz"
-  TIF_PATH = DATA_PATH / "shp"
-  SHP_PATH = DATA_PATH / "tif"
+  TIF_PATH = DATA_PATH / "tif"
+  SHP_PATH = DATA_PATH / "shp"
   IMG_PATH = DATA_PATH / "img"

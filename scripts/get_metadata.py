@@ -39,7 +39,7 @@ class GetMetadata():
         region, year = self.get_name_and_year2(f)
 
         df = df.append({
-          'filename': f,
+          'filename': f.replace('/', ''),
           'region': region,
           'year': year,
           'xmin': j['bounds'][0],
