@@ -1,10 +1,12 @@
 {
   "cSpell.words": [
     "EPSG",
+    "cond",
     "epgs",
     "gdal",
     "gdalopts",
     "inplace",
+    "isin",
     "iterrows",
     "laspy",
     "pdal",

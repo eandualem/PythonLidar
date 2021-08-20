@@ -49,7 +49,7 @@ class FileHandler():
 
   def read_point_data(self, name) -> dict:
     try:
-      path = Config.ASSETS_PATH / str(name + '.txt')
+      path = Config.LAZ_PATH / str(name + '.laz')
       las = laspy.read(path)
       self.logger.info(f"{name} read successfully")
       return las
