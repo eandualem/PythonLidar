@@ -1,51 +1,59 @@
 import json
 import pdal
-from config import Config
-from df_generator import DfGenerator
-from log import get_logger
-from file_handler import FileHandler
 from bounds import Bounds
+from config import Config
+from log import get_logger
+from df_generator import DfGenerator
+from file_handler import FileHandler
+from shapely.geometry import Polygon
+
 
 PUBLIC_DATA_PATH = "https://s3-us-west-2.amazonaws.com/usgs-lidar-public/"
 
 
 class GetData:
   def __init__(self,
+               epsg=26915,
                public_access_path: str = PUBLIC_DATA_PATH,
                metadata_filename: str = "",
                ):
+    self._input_epsg = 3857
+    self.output_epsg = epsg
     self._public_access_path = public_access_path
-    self._df_generator = DfGenerator()
-    self._logger = get_logger("FileHandler")
+    self._df_generator = DfGenerator(self._input_epsg, self.output_epsg)
     self._file_handler = FileHandler()
+    self._logger = get_logger("GetData")
     self._metadata = self._file_handler.read_csv(metadata_filename)
 
-  def get_pipeline(self, bounds, regions, filename):
+  def get_pipeline(self, bounds, polygon_str, regions, filename):
     pipe = self._file_handler.read_json("usgs_3dep_pipeline")
 
-    pipe['pipeline'][0]['bounds'] = bounds
     pipe['pipeline'][0]['filename'] = self._public_access_path + regions + "/ept.json"
-    pipe['pipeline'][3]['filename'] = str(Config.LAZ_PATH / str(filename + ".laz"))
-    pipe['pipeline'][4]['filename'] = str(Config.LAZ_PATH / str(filename + ".tif"))
+    pipe['pipeline'][0]['bounds'] = bounds
+    pipe['pipeline'][1]['polygon'] = polygon_str
+    pipe['pipeline'][4]['out_srs'] = f'EPSG:{self.output_epsg}'
+    pipe['pipeline'][5]['filename'] = str(Config.LAZ_PATH / str(filename + ".laz"))
+    pipe['pipeline'][6]['filename'] = str(Config.LAZ_PATH / str(filename + ".tif"))
     return pdal.Pipeline(json.dumps(pipe))
 
   def check_cache(self):
-    # TODO: 
+    # TODO:
     pass
 
   def get_bound_metadata(self, bounds: Bounds):
 
     filtered_df = self._metadata.loc[
-      (self._metadata['xmin'] <= bounds.xmin)
-      & (self._metadata['xmax'] >= bounds.xmax)
-      & (self._metadata['ymin'] <= bounds.ymin)
-      & (self._metadata['ymax'] >= bounds.ymax)
+        (self._metadata['xmin'] <= bounds.xmin)
+        & (self._metadata['xmax'] >= bounds.xmax)
+        & (self._metadata['ymin'] <= bounds.ymin)
+        & (self._metadata['ymax'] >= bounds.ymax)
     ]
     return filtered_df[["filename", "region", "year"]]
 
-  def get_geo_data(self, bounds, region, filename) -> None:
-    # TODO: check in chache first
-    pl = self.get_pipeline(bounds, region, filename)
+  def get_geo_data(self, bounds: Bounds, polygon_str, region) -> None:
+      # TODO: check in chache first
+    filename = region + "_" + bounds.get_bound_name()
+    pl = self.get_pipeline(bounds.get_bound_str(), polygon_str, region, filename)
     try:
       pl.execute()
       geo_data = self._df_generator.get_geo_data(filename)
@@ -54,29 +62,30 @@ class GetData:
     except RuntimeError as e:
       self._logger.exception(f"error reading geo data, error: {e}")
 
-  def get_data(self, bounds: str) -> None:
-    list_geo_data = []
-    df_meta = self.get_bound_metadata(bounds)
-    for index, row in df_meta.iterrows():
-      filename = row['filename'].replace('/', '')
-      data = self.get_geo_data(bounds.get_bound_str(), filename, filename)
-      list_geo_data.append(data)
+  def get_data(self, polygon: Polygon, region: str = "") -> None:
+
+    bound, polygon_str = self._df_generator.get_bound_from_polygon(polygon)
+    if region != "":
+      geo_data = self.get_geo_data(bound, polygon_str, region)
+      return [geo_data]
+    else:
+      df_meta = self.get_bound_metadata(bound)
+      list_geo_data = []
+      for index, row in df_meta.iterrows():
+
+        region = row['filename'].replace('/', '')
+        data = self.get_geo_data(bound, polygon_str, region)
+        list_geo_data.append(data)
 
     return list_geo_data
 
 
 # Test
-bounds = Bounds(-10436887.43333523, -10435905.484106943, 5148706.389047224, 5149217.145836504)
-# bounds = Bounds(-10425171.940, -10423171.940, 5164494.710, 5166494.710)
-get_data = GetData(metadata_filename="usgs_3dep_metadata")
-get_data.get_data(bounds)
+if __name__ == "__main__":
+    fetcher = GetData(epsg=4326, metadata_filename="usgs_3dep_metadata")
+    MINX, MINY, MAXX, MAXY = [-93.756155, 41.918015, -93.747334, 41.921429]
 
-# get_data.get_raster_terrain(
-#     bounds="([-10425171.940, -10423171.940], [5164494.710, 5166494.710])",
-# )
+    polygon = Polygon(((MINX, MINY), (MINX, MAXY),
+                       (MAXX, MAXY), (MAXX, MINY), (MINX, MINY)))
 
-# get_data.get_raster_terrain(
-#     bounds="([-11669524.7, -11666600.81], [4776607.3, 4778714.4])",
-#     regions="USGS_LPC_CO_SoPlatteRiver_Lot5_2013_LAS_2015",
-#     output_filename="SoPlatteRiver",
-# )
+    fetcher.get_data(polygon, "IA_FullState")

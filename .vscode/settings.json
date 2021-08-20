@@ -1,10 +1,14 @@
 {
   "cSpell.words": [
+    "EPSG",
     "epgs",
+    "gdal",
+    "gdalopts",
     "inplace",
     "iterrows",
     "laspy",
     "pdal",
+    "reprojection",
     "usgs",
     "xmax",
     "xmin",
