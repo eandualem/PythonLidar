@@ -1,8 +1,9 @@
 import logging
 import sys
 from logging.handlers import TimedRotatingFileHandler
+from config import Config
+
 FORMATTER = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
-LOG_FILE = "../log/PythonLidara.log"
 
 
 def get_console_handler():
@@ -12,7 +13,7 @@ def get_console_handler():
 
 
 def get_file_handler():
-  file_handler = TimedRotatingFileHandler(LOG_FILE, when='midnight')
+  file_handler = TimedRotatingFileHandler(Config.LOG_FILE, when='midnight')
   file_handler.setFormatter(FORMATTER)
   return file_handler
 

@@ -1,3 +1,4 @@
+import re
 import json
 import urllib3
 import pandas as pd
@@ -17,26 +18,28 @@ class GetMetadata():
     self._file_handler = FileHandler()
     self._logger = get_logger("GetMetadata")
 
+  def get_name_and_year2(self, filename):
+    filename = filename.replace('/', '')
+    regex = '20[0-9][0-9]+'
+    match = re.search(regex, filename)
+    if(match):
+      return (filename[:match.start() - 1], filename[match.start():match.end()])
+    else:
+      return (filename, None)
+
   def get_metadata(self):
     filenames = self._file_handler.read_txt(self.filename)
-    df = pd.DataFrame(columns=['region', 'year', 'xmin', 'xmax', 'ymin', 'ymax', 'points'])
-  
+    df = pd.DataFrame(columns=['filename', 'region', 'year', 'xmin', 'xmax', 'ymin', 'ymax', 'points'])
+
     index = 0
-    for d in filenames:
-      r = self._http.request('GET', self.url + d + "ept.json")
+    for f in filenames:
+      r = self._http.request('GET', self.url + f + "ept.json")
       if r.status == 200:
         j = json.loads(r.data)
-        temp_region = d.replace('/', '')
-        temp_region = temp_region.split("_")
-        if(len(temp_region[-1]) == 4):
-          region = "_".join(temp_region[:-1])
-          year = temp_region[-1]
-        else:
-          region = "_".join(temp_region)
-          year = None
+        region, year = self.get_name_and_year2(f)
 
-        region
         df = df.append({
+          'filename': f,
           'region': region,
           'year': year,
           'xmin': j['bounds'][0],
@@ -49,11 +52,11 @@ class GetMetadata():
           print(f"Read progress: {((index / len(filenames)) * 100):.2f}%")
         index += 1
       else:
-        self._logger.exception(f"Connection problem at index: {((index / len(filenames)) * 100):.2f}%")
-        return
-    self._file_handler.save_csv(df, self.filename)
+        self._logger.exception(f"Connection problem at: {f}")
+        # return
+    self._file_handler.save_csv(df, "usgs_3dep_metadata")
 
 
 if __name__ == "__main__":
-    gm = GetMetadata()
-    gm.get_metadata()
+  gm = GetMetadata()
+  gm.get_metadata()
