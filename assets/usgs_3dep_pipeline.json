@@ -7,8 +7,14 @@
       "filename": ""
     },
     {
-      "type": "filters.range",
+      "type": "filters.crop",
       "inputs": [ "read_data" ],
+      "tag": "crop",
+      "polygon": ""
+    },
+    {
+      "type": "filters.range",
+      "inputs": [ "crop" ],
       "tag": "no_noise",
       "limits": "Classification![7:7]"
     },
