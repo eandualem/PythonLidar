@@ -6,14 +6,14 @@ from file_handler import FileHandler
 from shapely.geometry import box, Point, Polygon
 
 
-class DfGenerator:
+class GDfGenerator:
   def __init__(self, input_epsg, output_epsg) -> None:
     self.output_epsg = output_epsg
     self.input_epsg = input_epsg
     self._file_handler = FileHandler()
     self._logger = get_logger("DfGenerator")
 
-  def get_geo_data(self, array_data):
+  def get_dep(self, array_data):
     for i in array_data:
       geometry_points = [Point(x, y) for x, y in zip(i["X"], i["Y"])]
       elevations = np.array(i["Z"])
@@ -45,7 +45,4 @@ class DfGenerator:
     bound = Bounds(xmin, xmax, ymin, ymax)
     x_cord, y_cord = polygon_df['geometry'][0].exterior.coords.xy
     polygon_str = self.get_polygon_str(x_cord, y_cord)
-
-    print(polygon_str)
-
     return bound, polygon_str
