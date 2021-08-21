@@ -43,7 +43,7 @@ class FetchLidar:
     """
     pipe = self._file_handler.read_json("usgs_3dep_pipeline")
     pipe['pipeline'][0]['filename'] = Config.USGS_3DEP_PUBLIC_DATA_PATH + \
-        region + "/ept.json"
+      region + "/ept.json"
     pipe['pipeline'][0]['bounds'] = bounds
     pipe['pipeline'][1]['polygon'] = polygon_str
     pipe['pipeline'][4]['out_srs'] = f'EPSG:{self.output_epsg}'
@@ -135,6 +135,7 @@ class FetchLidar:
     for index, row in regions.iterrows():
       try:
         data = self.get_geo_data(bound, polygon_str, row['filename'])
+        if(data.)
         list_geo_data.append({'year': row['year'],
                               'region': row['region'],
                               'geo_data': data,
