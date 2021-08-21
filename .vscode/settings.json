@@ -9,6 +9,7 @@
     "isin",
     "iterrows",
     "laspy",
+    "ndarray",
     "pdal",
     "reprojection",
     "usgs",

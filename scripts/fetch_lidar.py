@@ -11,8 +11,8 @@ from gdf_generator import GDfGenerator
 
 
 class FetchLidar:
-  """ Class for fetching point cloud data from usgs 3dep public repository in aws.
-      The class usesA PDAL pipeline object for fetching data, 
+  """ Class for fetching point cloud data from the EPT resource on AWS.
+      The class uses PDAL pipeline object for fetching data, 
       For more details on how pipelines are defined see http://www.pdal.io/pipeline.html
   """
 

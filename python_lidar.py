@@ -1,13 +1,17 @@
+
+import sys
 from bounds import Bounds
 from config import Config
 from log import get_logger
+import geopandas as gpd
+from fcache.cache import FileCache
+from shapely.geometry import Polygon
+
+sys.path.append(os.path.abspath(os.path.join('./scripts')))
 from fetch_lidar import FetchLidar
 from file_handler import FileHandler
 from get_metadata import GetMetadata
 from gdf_generator import GDfGenerator
-from shapely.geometry import Polygon
-from fcache.cache import FileCache
-import geopandas as gpd
 
 
 class PythonLidar:
