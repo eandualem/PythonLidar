@@ -16,7 +16,7 @@
       "type": "filters.range",
       "inputs": [ "crop" ],
       "tag": "no_noise",
-      "limits": "Classification![7:7]"
+      "limits": "Classification![2:7], Classification![9:9]"
     },
     {
       "type": "filters.assign",
@@ -30,22 +30,6 @@
       "tag": "reprojection",
       "in_srs": "EPSG:3857",
       "out_srs": ""
-    },
-    {
-      "type": "writers.las",
-      "tag": "writers_las",
-      "inputs": [ "reprojection" ],
-      "filename": ""
-    },
-    {
-      "type": "writers.gdal",
-      "inputs": [ "writers_las" ],
-      "filename": "",
-      "gdalopts": "tiled=yes, compress=deflate",
-      "nodata": -9999,
-      "output_type": "idw",
-      "resolution": 1,
-      "window_size": 6
     }
   ]
 }

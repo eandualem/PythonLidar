@@ -16,5 +16,6 @@
     "xmin",
     "ymax",
     "ymin"
-  ]
+  ],
+  "editor.tabSize": 2
 }

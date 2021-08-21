@@ -4,9 +4,10 @@ from log import get_logger
 from fetch_lidar import FetchLidar
 from file_handler import FileHandler
 from get_metadata import GetMetadata
-from df_generator import DfGenerator
+from gdf_generator import GDfGenerator
 from shapely.geometry import Polygon
 from fcache.cache import FileCache
+import geopandas as gpd
 
 
 class PythonLidar:
@@ -21,4 +22,5 @@ class PythonLidar:
 
   def fetch_lidar(self, polygon: Polygon, regions=[]):
     # TODO: Check in cache
-    
+    return self._fetch_lidar.fetch_lidar_data(polygon, regions)
+
