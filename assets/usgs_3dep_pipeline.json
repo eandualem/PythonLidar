@@ -16,7 +16,7 @@
       "type": "filters.range",
       "inputs": [ "crop" ],
       "tag": "no_noise",
-      "limits": "Classification![2:7], Classification![9:9]"
+      "limits": "Classification![2:2]"
     },
     {
       "type": "filters.assign",
@@ -25,11 +25,39 @@
       "assignment": "Classification[:]=0"
     },
     {
-      "type": "filters.reprojection",
+      "type": "filters.smrf",
       "inputs": [ "wipe_classes" ],
+      "tag": "groundify"
+    },
+    {
+      "type": "filters.range",
+      "inputs": [ "groundify"],
+      "tag": "classify",
+      "limits": "Classification[2:2]"
+    },
+    {
+      "type": "filters.reprojection",
+      "inputs": [ "classify" ],
       "tag": "reprojection",
       "in_srs": "EPSG:3857",
       "out_srs": ""
+    },
+    {
+      "type": "writers.las",
+      "inputs": [ "reprojection" ],
+      "tag": "writers_las",
+      "filename": ""
+    },
+    {
+      "type": "writers.gdal",
+      "inputs": [ "writers_las" ],
+      "filename": "",
+      "gdalopts": "tiled=yes, compress=deflate",
+      "nodata": -9999,
+      "output_type": "idw",
+      "resolution": 1,
+      "window_size": 6,
+      "radius": 1
     }
   ]
 }

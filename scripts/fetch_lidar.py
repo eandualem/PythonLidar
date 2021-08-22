@@ -47,9 +47,9 @@ class FetchLidar:
       region + "/ept.json"
     pipe['pipeline'][0]['bounds'] = bounds
     pipe['pipeline'][1]['polygon'] = polygon_str
-    pipe['pipeline'][4]['out_srs'] = f'EPSG:{self.output_epsg}'
-    # pipe['pipeline'][5]['filename'] = str(Config.LAZ_PATH / str(filename + ".laz"))
-    # pipe['pipeline'][6]['filename'] = str(Config.TIF_PATH / str(filename + ".tif"))
+    pipe['pipeline'][6]['out_srs'] = f'EPSG:{self.output_epsg}'
+    pipe['pipeline'][7]['filename'] = str(Config.LAZ_PATH / str(filename + ".laz"))
+    pipe['pipeline'][8]['filename'] = str(Config.TIF_PATH / str(filename + ".tif"))
     return pdal.Pipeline(json.dumps(pipe))
 
   def get_bound_metadata(self, bounds: Bounds) -> pd.DataFrame:
@@ -136,7 +136,7 @@ class FetchLidar:
     list_geo_data = []
     for index, row in regions.iterrows():
       try:
-        data = self.get_geo_data(bound, polygon_str, row['filename'])
+        data = self.get_dep(bound, polygon_str, row['filename'])
         # if(data.)
         list_geo_data.append({'year': row['year'],
                               'region': row['region'],

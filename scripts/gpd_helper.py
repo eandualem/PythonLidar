@@ -67,6 +67,7 @@ class GPDHelper:
     Returns:
         [type]: geopandas dataframe containing geometry and elivation
     """
+
     for i in array_data:
       geometry_points = [Point(x, y) for x, y in zip(i["X"], i["Y"])]
       elevations = np.array(i["Z"])

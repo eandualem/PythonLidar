@@ -1,4 +1,4 @@
-from view import View
+from vis import Vis
 import geopandas as gpd
 from bounds import Bounds
 from config import Config
@@ -28,10 +28,10 @@ class PythonLidar:
     return self._fetch_lidar.fetch_lidar_data(polygon, regions)
 
   def get_renderer(self, df: gpd.GeoDataFrame):
-    return View(df)
+    return Vis(df)
 
-  def get_sub_sampler(self, df: gpd.GeoDataFrame):
-    return SubSampler(df)
+  def get_sub_sampler(self, epsg, df: gpd.GeoDataFrame):
+    return SubSampler(self._input_epsg, epsg, df)
 
   def get_transformer(self, df: gpd.GeoDataFrame):
     return Transformer(df)
