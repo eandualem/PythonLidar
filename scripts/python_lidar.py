@@ -1,13 +1,14 @@
+from view import View
+import geopandas as gpd
 from bounds import Bounds
 from config import Config
 from log import get_logger
 from fetch_lidar import FetchLidar
+from transformer import Transformer
+from sub_sampler import SubSampler
 from file_handler import FileHandler
-from get_metadata import GetMetadata
-from gpd_helper import GPDHelper
 from shapely.geometry import Polygon
 from fcache.cache import FileCache
-import geopandas as gpd
 
 
 class PythonLidar:
@@ -26,7 +27,12 @@ class PythonLidar:
     # TODO: Check in cache
     return self._fetch_lidar.fetch_lidar_data(polygon, regions)
 
-  def get_renderer()
+  def get_renderer(self, df: gpd.GeoDataFrame):
+    return View(df)
 
-  
+  def get_sub_sampler(self, df: gpd.GeoDataFrame):
+    return SubSampler(df)
+
+  def get_transformer(self, df: gpd.GeoDataFrame):
+    return Transformer(df)
 

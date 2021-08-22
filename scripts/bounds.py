@@ -2,13 +2,12 @@ class Bounds:
     """ Store bounds as an object for ease of access.
     """
     def __init__(self, xmin: float, xmax: float, ymin: float, ymax: float) -> None:
-        """ Method used for instantiating the Bounds class
-
+        """ 
         Args:
-            xmin (float): the smallest x value
-            xmax (float): the largest x value
-            ymin (float): the smallest y value
-            ymax (float): the largest y value
+            xmin (float): minimum longitude value in the boundary
+            xmax (float): maximum longitude value in the boundary
+            ymin (float): minimum latitude value in the boundary
+            ymax (float): maximum latitude value in the boundary
         """
 
         self.xmin = xmin

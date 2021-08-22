@@ -7,7 +7,7 @@ from config import Config
 from log import get_logger
 from shapely.geometry import Polygon
 from file_handler import FileHandler
-from gdf_generator import GDfGenerator
+from gpd_helper import GPDHelper
 
 
 class FetchLidar:
@@ -27,10 +27,11 @@ class FetchLidar:
     self._file_handler = FileHandler()
     self._logger = get_logger("GetData")
     self._metadata = self._file_handler.read_csv("usgs_3dep_metadata")
-    self._gdf_generator = GDfGenerator(self._input_epsg, self.output_epsg)
+    self._gdf_helper = GPDHelper(self._input_epsg, self.output_epsg)
 
   def get_pipeline(self, bounds: str, polygon_str: str, region: str, filename: str):
-    """ Update pipeline json for fetching point cloud data using pdal
+    """ Loads Pipeline template from json file and 
+        Updates the pipeline json for fetching point cloud data using pdal
 
     Args:
         bounds (str): geometry object describing boundary of interest for fetching point cloud data
@@ -70,7 +71,8 @@ class FetchLidar:
     return filtered_df[["filename", "region", "year"]]
 
   def check_valid_bound(self, bounds: Bounds, regions: list) -> bool:
-    """ Check if resource boundaries enclose the given boundary
+    """ Check if resource boundaries enclose the given boundary. 
+        Checks whether region provided inclosed a given boundary.
 
     Args:
         bounds (Bounds): geometry object describing boundary of interest for fetching point cloud data
@@ -106,7 +108,7 @@ class FetchLidar:
                            polygon_str, region, filename)
     try:
       pl.execute()
-      dep_data = self._gdf_generator.get_dep(pl.arrays)
+      dep_data = self._gdf_helper.get_dep(pl.arrays)
       self._logger.info(f"successfully read geo data: {filename}")
       return dep_data
     except RuntimeError as e:
@@ -123,7 +125,7 @@ class FetchLidar:
         list: list of geopandas dataframe for all resource location with point cloud data
     """
 
-    bound, polygon_str = self._gdf_generator.get_bound_from_polygon(polygon)
+    bound, polygon_str = self._gdf_helper.get_bound_from_polygon(polygon)
     if len(regions) == 0:
       regions = self.get_bound_metadata(bound)
     else:
@@ -135,7 +137,7 @@ class FetchLidar:
     for index, row in regions.iterrows():
       try:
         data = self.get_geo_data(bound, polygon_str, row['filename'])
-        if(data.)
+        # if(data.)
         list_geo_data.append({'year': row['year'],
                               'region': row['region'],
                               'geo_data': data,

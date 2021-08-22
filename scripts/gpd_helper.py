@@ -58,7 +58,7 @@ class GPDHelper:
     return df
 
   def get_polygon_str(self, x_cord, y_cord) -> str:
-    """ 
+    """ Compute Polygons Cropping string used when building Pdal's crop pipeline.
 
     Args:
         x_cord: [description]
@@ -75,7 +75,7 @@ class GPDHelper:
     return polygon_str
 
   def get_bound_from_polygon(self, polygon: Polygon) -> tuple:
-    """ Calculate rectangular bounds of a given polygon
+    """ computes bounds value for the given polygon
 
     Args:
         polygon (Polygon): shapely geometry object describing polygon
