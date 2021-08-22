@@ -54,7 +54,7 @@ class Vis:
     ax.scatter(points[:, 0], points[:, 1], points[:, 2], s=0.01, color=color)
     plt.show()
 
-  def plot_heatmap(self, title) -> None:
+  def plot_heatmap(self, cmap: str = "terrain") -> None:
     """Plots a 2D heat map for the point cloud data using matplotlib
 
     Args:
@@ -63,10 +63,5 @@ class Vis:
     """
 
     fig, ax = plt.subplots(1, 1, figsize=(12, 10))
-    fig.patch.set_alpha(0)
-    plt.grid('on', zorder=0)
-    self.df.plot(column='elevation', ax=ax, legend=True, cmap="magma")
-    plt.title('Flow Accumulation')
-    plt.xlabel('Longitude')
-    plt.ylabel('Latitude')
+    self.df.plot(column='elevation', ax=ax, legend=True, cmap=cmap)
     plt.show()

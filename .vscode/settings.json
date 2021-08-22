@@ -1,14 +1,11 @@
 {
   "cSpell.words": [
     "EPSG",
-    "axlog",
-    "cmap",
     "cond",
     "epgs",
     "gdal",
     "gdalopts",
     "groundify",
-    "imshow",
     "inplace",
     "isin",
     "iterrows",
