@@ -11,29 +11,50 @@ class GPDHelper:
       geospatial data, and provide different functionalities.
   """
 
-  def __init__(self, input_epsg, output_epsg) -> None:
+  def __init__(self, input_epsg:int, output_epsg:int) -> None:
     """ Method used for instantiating the GPDHelper class
 
     Args:
-        input_epsg ([type]): [description]
+        input_epsg (int): Coordinate reference system to be used for transformation
         output_epsg ([type]): [description]
     """
-    self.output_epsg = output_epsg
     self.input_epsg = input_epsg
+    self.output_epsg = output_epsg
     self._file_handler = FileHandler()
     self._logger = get_logger("DfGenerator")
 
-  def covert_crs(self, crs_epgs: int, df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+  def covert_crs(self, df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """ Transform geometries to a new coordinate reference system.
 
     Args:
-        crs_epgs (int): Coordinate reference system to be used for transformation
         df (gpd.GeoDataFrame): A geopandas dataframe. The crs attribute on the GeoSeries thats is to be transformed must be set.
 
     Returns:
         gpd.GeoDataFrame
     """
-    df['geometry'] = df['geometry'].to_crs(crs_epgs)
+    df['geometry'] = df['geometry'].to_crs(self.output_epsg)
+    df = df.set_crs(self.output_epsg)
+    return df
+
+  def get_dep_points(self, array_of_points: np.ndarray) -> gpd.GeoDataFrame:
+    """ constructs a geopandas data frame having an elevation column and a geometry column representing point coordinates in a given coordinate reference system
+        from point cloud data.
+
+    Args:
+        array_data (np.ndarray): point cloud data from  pdal pipeline
+
+    Returns:
+        [type]: geopandas dataframe containing geometry and elivation
+    """
+    
+    geometry_points = [Point(x, y) for x, y in zip(array_of_points[:, 0], array_of_points[:, 1])]
+    elevations = np.array(array_of_points[:, 2])
+
+    df = gpd.GeoDataFrame(columns=["elevation", "geometry"])
+    df['elevation'] = elevations
+    df['geometry'] = geometry_points
+    df = df.set_geometry("geometry")
+    df.set_crs(epsg=self.output_epsg, inplace=True)
     return df
 
   def get_dep(self, array_data: np.ndarray) -> gpd.GeoDataFrame:
