@@ -126,22 +126,26 @@ class FetchLidar:
     """
 
     bound, polygon_str = self._gdf_helper.get_bound_from_polygon(polygon)
+
     if len(regions) == 0:
       regions = self.get_bound_metadata(bound)
+
     else:
       regions = self._metadata[self._metadata['filename'].isin(regions)]
       if self.check_valid_bound(bound, regions) is False:
         self._logger.exception("The boundary is not within the region provided")
-    print(regions)
+
     list_geo_data = []
     for index, row in regions.iterrows():
       try:
         data = self.get_dep(bound, polygon_str, row['filename'])
-        # if(data.)
-        list_geo_data.append({'year': row['year'],
-                              'region': row['region'],
-                              'geo_data': data,
-                              })
+
+        if(data is not None):
+          list_geo_data.append({'year': row['year'],
+                                'region': row['region'],
+                                'geo_data': data,
+                                })
+
       except RuntimeError as e:
         self._logger.exception(
           f"error featching geo data for {row['filename']}, error: {e}")
