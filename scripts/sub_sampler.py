@@ -8,8 +8,7 @@ class SubSampler:
   """
 
   def __init__(self, input_epsg: int, output_epsg: int, df: gpd.GeoDataFrame):
-    """[summary]
-
+    """
     Args:
         input_epsg (int): Coordinate reference system for use in transformations.
         output_epsg (int): A coordinate reference system that the user uses.
@@ -59,8 +58,8 @@ class SubSampler:
     return nb_vox, non_empty_voxel_keys, nb_pts_per_voxel, idx_pts_vox_sorted
 
   def grid_barycenter(self, voxel_size: int) -> gpd.GeoDataFrame:
-    """ Performs Grid grid subsampling strategy that divides 3D space into regular cubic cells that are called voxels. 
-        For each cell of this grid, It only keeps a representative point, which is the barycenter of the points in that cell. 
+    """ Performs Grid grid subsampling strategy that divides 3D space into regular cubic cells that are called voxels.
+        For each cell of this grid, It only keeps a representative point, which is the barycenter of the points in that cell.
         This point is representative of the cell.
 
     Args:
@@ -74,11 +73,11 @@ class SubSampler:
     grid_barycenter = []
     points = self.get_points()
     nb_vox, non_empty_voxel_keys, nb_pts_per_voxel, idx_pts_vox_sorted = self.get_voxel_grid(
-        points, voxel_size)
+      points, voxel_size)
 
     for idx, vox in enumerate(non_empty_voxel_keys):
       voxel_grid[tuple(
-          vox)] = points[idx_pts_vox_sorted[last_seen:last_seen + nb_pts_per_voxel[idx]]]
+        vox)] = points[idx_pts_vox_sorted[last_seen:last_seen + nb_pts_per_voxel[idx]]]
       grid_barycenter.append(np.mean(voxel_grid[tuple(vox)], axis=0))
       last_seen += nb_pts_per_voxel[idx]
     sample_points = np.array(list(map(list, grid_barycenter)))
@@ -100,14 +99,14 @@ class SubSampler:
     grid_candidate_center = []
     points = self.get_points()
     nb_vox, non_empty_voxel_keys, nb_pts_per_voxel, idx_pts_vox_sorted = self.get_voxel_grid(
-         points, voxel_size)
+      points, voxel_size)
 
-     for idx, vox in enumerate(non_empty_voxel_keys):
-        voxel_grid[tuple(
-            vox)] = points[idx_pts_vox_sorted[last_seen:last_seen + nb_pts_per_voxel[idx]]]
-        grid_candidate_center.append(voxel_grid[tuple(vox)][np.linalg.norm(
-            voxel_grid[tuple(vox)] - np.mean(voxel_grid[tuple(vox)], axis=0), axis=1).argmin()])
-        last_seen += nb_pts_per_voxel[idx]
+    for idx, vox in enumerate(non_empty_voxel_keys):
+      voxel_grid[tuple(
+        vox)] = points[idx_pts_vox_sorted[last_seen:last_seen + nb_pts_per_voxel[idx]]]
+      grid_candidate_center.append(voxel_grid[tuple(vox)][np.linalg.norm(
+        voxel_grid[tuple(vox)] - np.mean(voxel_grid[tuple(vox)], axis=0), axis=1).argmin()])
+      last_seen += nb_pts_per_voxel[idx]
 
-      sample_points = np.array(list(map(list, grid_candidate_center)))
-      return self._gpd_helper.get_dep_points(sample_points)
+    sample_points = np.array(list(map(list, grid_candidate_center)))
+    return self._gpd_helper.get_dep_points(sample_points)
