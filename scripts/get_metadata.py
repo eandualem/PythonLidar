@@ -10,16 +10,15 @@ DEFAULT_FILENAME = "usgs_3dep_filenames"
 
 
 class GetMetadata():
-  """ Generates a metadata describing region, year, xmin, xmax, ymin, ymax and amount of point cloud data 
-      for all EPT resource on AWS. 
+  """ Generates metadata describing the region, year, xmin, xmax, ymin, ymax, 
+      and amount of point cloud data for all EPT resources on AWS. 
   """
 
   def __init__(self, name: str = DEFAULT_FILENAME, target_url: str = DEFAULT_URL):
-    """ Method used for instantiating the GetMetadata class
-
+    """ 
     Args:
-        name (str, optional): name of file containing all EPT resource locations on AWS. Defaults to DEFAULT_FILENAME.
-        target_url (str, optional): url containing ept file for the resources. Defaults to DEFAULT_URL.
+        name (str, optional): Name of a file that contains all EPT resource locations on AWS. Defaults to DEFAULT_FILENAME.
+        target_url (str, optional): A url containing the ept resource file. Defaults to DEFAULT_URL.
     """
     self.url = target_url
     self.filename = name
@@ -28,13 +27,13 @@ class GetMetadata():
     self._logger = get_logger("GetMetadata")
 
   def get_name_and_year(self, resource_location: str) -> tuple:
-    """ Extracts year and region from EPT resource location 
+    """ Extracts year and region from EPT resource location.
 
     Args:
-        resource_location (str): name of EPT resource location 
+        resource_location (str): Name of EPT resource location 
 
     Returns:
-        tuple: tuple containing name and region
+        tuple: A tuple containing the name of the region and year
     """
 
     resource_location = resource_location.replace('/', '')
@@ -46,7 +45,7 @@ class GetMetadata():
       return (resource_location, None)
 
   def get_metadata(self):
-    """ Exracts metadata for all EPT resource on AWS
+    """ Extracts metadata for all EPT resources on AWS
     """
     filenames = self._file_handler.read_txt(self.filename)
     df = pd.DataFrame(columns=['filename', 'region',

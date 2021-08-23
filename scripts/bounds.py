@@ -19,18 +19,23 @@ class Bounds:
         """ Return bounds as a tuple
 
         Returns:
-            tuple
+            tuple: bounds in tuple format
         """
         return ([self.xmin, self.xmax], [self.ymin, self.ymax])
 
     def get_bound_str(self) -> str:
-        """ Return bounds as a string
+        """ Return bounds as a string in '({[minx, maxx]},{[miny, maxy]})' format which pdal pipeline's reader.ept expects.
 
         Returns:
-            str: return bounds in a '({[minx, maxx]},{[miny,maxy]})' format which pdal pipeline's reader.ept expects.
+            str: bounds in sting format
         """
 
         return f"([{self.xmin}, {self.xmax}], [{self.ymin}, {self.ymax}])"
     
     def get_bound_name(self) -> str:
+        """ Concatenate bound values and returns them as a string
+
+        Returns:
+            str: bounds in sting format
+        """
         return f"{self.xmin}_{self.xmax}_{self.ymin}_{self.ymax}"
