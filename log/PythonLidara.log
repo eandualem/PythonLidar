@@ -1,0 +1,17 @@
+2021-08-23 11:29:12,174 — FileHandler — INFO — usgs_3dep_metadata read successfully
+2021-08-23 11:31:01,567 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 11:31:01,567 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 11:31:22,105 — GetData — INFO — successfully read geodata: IA_FullState_-10436887.43333523_-10436664.794353643_5148706.389047223_5148855.992775583
+2021-08-23 11:34:57,075 — FileHandler — INFO — usgs_3dep_metadata read successfully
+2021-08-23 11:35:01,377 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 11:35:01,377 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 11:35:37,003 — GetData — INFO — successfully read geodata: IA_FullState_-10436887.43333523_-10436664.794353643_5148706.389047223_5148855.992775583
+2021-08-23 12:00:53,289 — FileHandler — INFO — usgs_3dep_metadata read successfully
+2021-08-23 12:01:08,101 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 12:01:08,101 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 12:01:42,021 — GetData — INFO — successfully read geodata: IA_FullState_-10436887.43333523_-10436664.794353643_5148706.389047223_5148855.992775583
+2021-08-23 12:02:01,552 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 12:02:01,552 — FileHandler — INFO — usgs_3dep_pipeline read successfully
+2021-08-23 12:02:42,445 — GetData — INFO — successfully read geodata: IA_FullState_-10436887.43333523_-10436664.794353643_5148706.389047223_5148855.992775583
+2021-08-23 12:03:41,289 — FileHandler — INFO — usgs_3dep_metadata read successfully
+2021-08-23 12:17:02,700 — FileHandler — INFO — usgs_3dep_metadata read successfully
