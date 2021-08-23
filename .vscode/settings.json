@@ -5,16 +5,22 @@
     "epgs",
     "gdal",
     "gdalopts",
+    "groundify",
     "inplace",
     "isin",
     "iterrows",
     "laspy",
+    "ndarray",
+    "numpy",
     "pdal",
     "reprojection",
     "usgs",
+    "voxel",
+    "vstack",
     "xmax",
     "xmin",
     "ymax",
     "ymin"
-  ]
+  ],
+  "editor.tabSize": 2
 }
