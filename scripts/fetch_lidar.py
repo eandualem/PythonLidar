@@ -131,7 +131,7 @@ class FetchLidar:
       regions = self._metadata[self._metadata['filename'].isin(regions)]
       if self.check_valid_bound(bound, regions) is False:
         self._logger.exception("The boundary is not within the region provided")
-    print(regions)
+
     list_geo_data = []
     for index, row in regions.iterrows():
       try:
